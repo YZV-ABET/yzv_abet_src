@@ -4,7 +4,7 @@ def parse_courses():
     import numpy as np
     import pandas as pd
     import gspread
-    from oauth2client.service_account import ServiceAccountCredentials
+#    from oauth2client.service_account import ServiceAccountCredentials
     
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 #    credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/bengisuguresti/config/gspread/credentials.json', scope)
