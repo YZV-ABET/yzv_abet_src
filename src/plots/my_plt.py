@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import ipywidgets as widgets
 from ipywidgets import interact, interactive, fixed, interact_manual
-from parser import parse_courses
-from my_widgets import course_widget, pi_widget, dist_widget, handle_choice
+from src.parsers.parser import *
+from src.widgets.my_widgets import *
 import matplotlib.pyplot as plt
 import seaborn as sns
 from copy import deepcopy

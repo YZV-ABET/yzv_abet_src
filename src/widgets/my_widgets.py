@@ -1,5 +1,5 @@
 import ipywidgets as widgets
-from parser import parse_courses
+from src.parsers.parser import parse_courses
 
 
 df1, df2, df3, mand_df, elec_df = parse_courses()
