@@ -7,9 +7,9 @@ def parse_courses():
     from oauth2client.service_account import ServiceAccountCredentials
     
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/bengisuguresti/config/gspread/credentials.json', scope)
+#    credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/bengisuguresti/config/gspread/credentials.json', scope)
     gc = gspread.service_account()
-    sht1 = gc.open_by_key('17Jfyk1KCvuGHHGgcx_mI6bJ4ICUIBBxdTxKHO6QfhFI')
+    sht1 = gc.open_by_key('1T4agbXrPsCXcSwvjtnEw90IFcmR4Ut6N7M8fTZC4Hq4')
     ws1 = sht1.get_worksheet(0)
     rec = np.array(ws1.get_all_values())
     id1 = np.array(rec[2])[:26]
