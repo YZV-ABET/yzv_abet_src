@@ -3,7 +3,6 @@
 def parse_courses():
     import numpy as np
     import pandas as pd
-    import gspread
     from google.colab import auth
     auth.authenticate_user()
 
