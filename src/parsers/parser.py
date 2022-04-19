@@ -7,9 +7,10 @@ def parse_courses():
     auth.authenticate_user()
 
     import gspread
-    from oauth2client.client import GoogleCredentials
-    
-    gc = gspread.authorize(GoogleCredentials.get_application_default())
+    from google.auth import default
+
+    creds, _ = default()
+    gc = gspread.authorize(creds)
     sht1 = gc.open_by_key('1T4agbXrPsCXcSwvjtnEw90IFcmR4Ut6N7M8fTZC4Hq4')
     ws1 = sht1.get_worksheet(0)
     rec = np.array(ws1.get_all_values())
