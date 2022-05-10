@@ -23,7 +23,7 @@ def parse_courses():
             id1[i] = id1[i-1]
     arrays = [id1, id2]
     midx = pd.MultiIndex.from_arrays(arrays, names=('category', 'subcategory'))
-    df1 = pd.DataFrame(rec[5:52, :26].T, index=midx)
+    df1 = pd.DataFrame(rec[4:52, :26].T, index=midx)
     df1, df1.columns = df1.loc[df1.index.values[1:]], df1.loc[df1.index.values[0]]
     df1.sort_index(inplace=True)
     df2 = df1[~(df1 == "")].dropna(axis=1)

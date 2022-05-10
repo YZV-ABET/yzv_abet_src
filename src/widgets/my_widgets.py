@@ -54,3 +54,9 @@ dist_widget = widgets.SelectMultiple(
     description='Courses:',
     disabled=False
 )
+
+full_contrib_filter = widgets.Checkbox(
+    value=False,
+    description='Filter by Full Course Contribution',
+    disabled=False
+)

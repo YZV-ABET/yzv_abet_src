@@ -15,9 +15,13 @@ df1, df2, df3, mand_df, elec_df = parse_courses()
 colors = sns.color_palette('pastel')[0:50]
 
 
-def pi_dist_pie(course):
+def pi_dist_pie(course, filter_choice):
     clear_output(wait=True)
     df = df2.loc[course]["1":"7"]
+    if filter_choice:
+        df_filter = df.copy()
+        df_filter[df < 3] = 0
+        df = df_filter.copy()
     df_print = pd.DataFrame(data=df.sum(level=0).values / df.sum(level=0).values.sum() * 100, index=df.sum(level=0).index, columns=['PI Percentage'])
     display(HTML(df_print.T.to_html()))
     plt.figure(figsize=(8, 6), dpi=80)
@@ -37,10 +41,14 @@ def pi_levels_percourse(course):
         axs[i-1].set_ylabel("Contribution Level")
 
 
-def total_course_pi(choice):
+def total_course_pi(choice, filter_choice):
     clear_output(wait=True)
     idx = handle_choice(choice)
     df = df2.loc[idx].T.loc["1":"7"].T
+    if filter_choice:
+        df_filter = df.copy()
+        df_filter[df < 3] = 0
+        df = df_filter.copy()
     df_print = pd.DataFrame(data=df.sum(axis=1), index=df.index, columns=['Sum of Contributions'])
     display(HTML(df_print.T.to_html()))
     plt.figure(figsize=(len(idx), 5), dpi=80)
@@ -90,10 +98,14 @@ def contrib_dist_percourse(course):
     plt.show()
     
 
-def average_course_contribution(choice):
+def average_course_contribution(choice, filter_choice):
     clear_output(wait=True)
     idx = handle_choice(choice)
     df = df2.loc[idx, "1":"7"]
+    if filter_choice:
+        df_filter = df.copy()
+        df_filter[df < 3] = 0
+        df = df_filter.copy()
     df_print = pd.DataFrame(data=df.mean(axis=1), index=df.index, columns=['Average Contribution'])
     display(HTML(df_print.T.to_html()))
     plt.figure(figsize=(len(idx) + 5, 8), dpi=80)
@@ -104,9 +116,13 @@ def average_course_contribution(choice):
     plt.show()
     
 
-def course_pi_usage():
+def course_pi_usage(filter_choice):
     clear_output(wait=True)
     df = df2.loc[:, "1":"7"]
+    if filter_choice:
+        df_filter = df.copy()
+        df_filter[df < 3] = 0
+        df = df_filter.copy()
     df_save = deepcopy(df.T)
     df_save['pis'] = df_save.index.levels[1][2:]
     deneme = pd.melt(df_save, id_vars=['pis'], value_vars=list(df_save.columns).remove('pis'))
@@ -127,9 +143,13 @@ def contrib_dist_perpi(pi):
     ax.set_xlabel("Contribution Level")
     ax.set_ylabel("Number of Courses")
 
-def average_pi_contribution():
+def average_pi_contribution(filter_choice):
     clear_output(wait=True)
     df = df2.loc[:, "1":"7"]
+    if filter_choice:
+        df_filter = df.copy()
+        df_filter[df < 3] = 0
+        df = df_filter.copy()
     df_save = deepcopy(df.T)
     df_save['pis'] = df_save.index.levels[1][2:]
     df = pd.melt(df_save, id_vars=['pis'], value_vars=list(df_save.columns).remove('pis'))
