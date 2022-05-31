@@ -26,12 +26,14 @@ def parse_courses():
     df1 = pd.DataFrame(rec[4:52, :26].T, index=midx)
     df1, df1.columns = df1.loc[df1.index.values[1:]], df1.loc[df1.index.values[0]]
     df1.sort_index(inplace=True)
+    df1 = df1.T
     df1 = df1.drop(['YZV 101E', 'YZV 102E', 'YZV 212E', 'YZV 302E', 'YZV 311E'])
     df1 = df1.rename(index={'YZV 103E': 'YZV 101E/103E',
                                   'YZV 104E': 'YZV 102E/104E',
                                   'YZV 321E': 'YZV 212E/321E',
                                   'YZV 303E': 'YZV 302E/303E',
                                   'YZV 312E': 'YZV 311E/312E'})
+    df1 = df1.T
     df2 = df1[~(df1 == "")].dropna(axis=1)
     df3 = df1.drop(df2.columns, axis=1)
     df1, df2, df3 = df1.T, df2.T, df3.T
