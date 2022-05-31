@@ -116,9 +116,12 @@ def average_course_contribution(choice, filter_choice):
     plt.show()
     
 
-def course_pi_usage(filter_choice):
+def course_pi_usage(filter_choice, mandatory):
     clear_output(wait=True)
-    df = df2.loc[:, "1":"7"]
+    if mandatory:
+        df = mand_df.loc[:, "1":"7"]
+    else:
+        df = df2.loc[:, "1":"7"]
     if filter_choice:
         df_filter = df.copy()
         df_filter[df < 3] = 0
@@ -134,18 +137,28 @@ def course_pi_usage(filter_choice):
     ax.set_ylabel("Number of Courses")
 
 
-def contrib_dist_perpi(pi):
+def contrib_dist_perpi(pi, filter_choice, mandatory):
     clear_output(wait=True)
-    df = df2.iloc[:, df2.columns.get_level_values(1)==pi]
+    if mandatory:
+        df = mand_df.iloc[:, df2.columns.get_level_values(1)==pi]
+    else:
+        df = df2.iloc[:, df2.columns.get_level_values(1)==pi]
+    if filter_choice:
+        df_filter = df.copy()
+        df_filter[df < 3] = 0
+        df = df_filter.copy()
     display(HTML(df.value_counts().to_frame().T.to_html()))
     ax = df.plot(kind='hist', title='Number of Contributions of Level 1-2-3 per PI', legend=False)
     ax.set_xticks([0, 1, 2, 3])
     ax.set_xlabel("Contribution Level")
     ax.set_ylabel("Number of Courses")
 
-def average_pi_contribution(filter_choice):
+def average_pi_contribution(filter_choice, mandatory):
     clear_output(wait=True)
-    df = df2.loc[:, "1":"7"]
+    if mandatory:
+        df = mand_df.loc[:, "1":"7"]
+    else:
+        df = df2.loc[:, "1":"7"]
     if filter_choice:
         df_filter = df.copy()
         df_filter[df < 3] = 0

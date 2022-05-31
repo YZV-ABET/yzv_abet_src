@@ -60,3 +60,9 @@ full_contrib_filter = widgets.Checkbox(
     description='Filter by Full Course Contribution',
     disabled=False
 )
+
+mandatory_filter = widgets.Checkbox(
+    value=True,
+    description='Filter Mandatory Course Contribution',
+    disabled=False
+)
