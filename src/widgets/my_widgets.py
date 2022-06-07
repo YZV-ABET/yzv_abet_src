@@ -1,12 +1,18 @@
 import ipywidgets as widgets
-from src.parsers.parser import parse_courses
+from src.parsers.parser import parse_courses, parse_plans
 
 
 df1, df2, df3, mand_df, elec_df = parse_courses()
 
+plan_titles, plans = parse_plans()
+
 
 course_types = {'All':df2.index, 'Mandatory':mand_df.index, 'Elective': elec_df.index}
 
+term_list = ['All Courses']
+for plan_title in plan_titles:
+    terms = [plan_title + ' Donem: ' + str(i) + ' Zorunlu Dersler' for i in range(1, 9)]
+    term_list = term_list + terms
 
 def handle_choice(choice):
     if 'All' in choice:
@@ -65,4 +71,13 @@ mandatory_filter = widgets.Checkbox(
     value=True,
     description='Filter Mandatory Course Contribution',
     disabled=False
+)
+
+termplan_widget = widgets.SelectMultiple(
+    options=term_list,
+    value=('All Courses',),
+    description='Filter courses by plans and terms:',
+    disabled=False,
+    display='flex',
+    layout={'height': '250px', 'width': '500px', 'description_width': '400px'}
 )

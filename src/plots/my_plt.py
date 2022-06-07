@@ -12,7 +12,34 @@ from copy import deepcopy
 
 df1, df2, df3, mand_df, elec_df = parse_courses()
 
+plan_titles, plans = parse_plans()
+
 colors = sns.color_palette('pastel')[0:50]
+
+
+def plot_contrib_heatmap(filter_choice, mandatory, termplan_choice):
+    clear_output(wait=True)
+    if mandatory:
+        df = mand_df.copy()
+    else:
+        df = df2.copy()
+    df = df.T.loc["1":"7"].T
+    if 'All Courses' not in termplan_choice:
+        df = filter_terms(df, termplan_choice, plan_titles, plans)
+    if filter_choice:
+        df_filter = df.copy()
+        df_filter[df < 3] = 0
+        df = df_filter.copy()
+    plt.figure(figsize=(12, 8), dpi=80)
+    sns.heatmap(df.T.loc["1":"7"].astype(float
+                ).groupby(level=0).mean().T, annot=True)
+    plt.title("Course Contribution Heatmap per PI")
+    plt.show()
+    plt.figure(figsize=(12, 8), dpi=80)
+    sns.heatmap(df.T.loc["1":"7"].astype(float
+                ).groupby(level=1).mean().T, annot=False)
+    plt.title("Course Contribution Heatmap per sub-PI")
+    plt.show()
 
 
 def pi_dist_pie(course, filter_choice):
@@ -65,7 +92,7 @@ def pi_contr_level_dist(choice):
     df['pis'] = df.index.levels[1][2:]
     deneme = pd.melt(df, id_vars=['pis'], value_vars=list(df.columns).remove('pis'))
     plt.figure(figsize=(12, 8), dpi=80)
-    ax1 = sns.boxplot(x='pis', y='value', data=deneme, palette=colors[:len(deneme['pis'])])
+    ax1 = sns.boxplot(x='pis', y='value', data=deneme, palette=colors[:len(deneme['pis'])], showmeans=True)
     ax1.set_xlabel("Sub-PI")
     ax1.set_ylabel("Contribution Level")
     plt.title("Sub-PI Contribution Level Distribution of Courses")
@@ -76,7 +103,41 @@ def pi_contr_level_dist(choice):
     df['pis'] = df.index
     deneme = pd.melt(df, id_vars=['pis'], value_vars=list(df.columns).remove('pis'))
     plt.figure(figsize=(12, 8), dpi=80)
-    ax2 = sns.boxplot(x='pis', y='value', data=deneme, palette=colors[:len(deneme['pis'])])
+    ax2 = sns.boxplot(x='pis', y='value', data=deneme, palette=colors[:len(deneme['pis'])], showmeans=True)
+    ax2.set_xlabel("PI")
+    ax2.set_ylabel("Contribution Level")
+    plt.title("PI Contribution Level Distribution of Courses")
+    plt.show()
+    
+    return
+
+
+def pi_contr_level_dist_perterm(mandatory, termplan_choice):
+    clear_output(wait=True)
+    if mandatory:
+        df = mand_df.copy()
+    else:
+        df = df2.copy()
+    df = df.T.loc["1":"7"].T
+    if 'All Courses' not in termplan_choice:
+        df = filter_terms(df, termplan_choice, plan_titles, plans)
+    df = df.T
+    df_save = deepcopy(df)
+    df['pis'] = df.index.levels[1][2:]
+    deneme = pd.melt(df, id_vars=['pis'], value_vars=list(df.columns).remove('pis'))
+    plt.figure(figsize=(12, 8), dpi=80)
+    ax1 = sns.boxplot(x='pis', y='value', data=deneme, palette=colors[:len(deneme['pis'])], showmeans=True)
+    ax1.set_xlabel("Sub-PI")
+    ax1.set_ylabel("Contribution Level")
+    plt.title("Sub-PI Contribution Level Distribution of Courses")
+    plt.show()
+    
+    df_save = df_save.groupby(level=0).sum() / df_save.groupby(level=0).count()
+    df = deepcopy(df_save)
+    df['pis'] = df.index
+    deneme = pd.melt(df, id_vars=['pis'], value_vars=list(df.columns).remove('pis'))
+    plt.figure(figsize=(12, 8), dpi=80)
+    ax2 = sns.boxplot(x='pis', y='value', data=deneme, palette=colors[:len(deneme['pis'])], showmeans=True)
     ax2.set_xlabel("PI")
     ax2.set_ylabel("Contribution Level")
     plt.title("PI Contribution Level Distribution of Courses")
@@ -108,20 +169,23 @@ def average_course_contribution(choice, filter_choice):
         df = df_filter.copy()
     df_print = pd.DataFrame(data=df.mean(axis=1), index=df.index, columns=['Average Contribution'])
     display(HTML(df_print.T.to_html()))
-    plt.figure(figsize=(len(idx) + 5, 8), dpi=80)
-    ax = sns.barplot(x=df.index, y=df.mean(axis=1),palette = colors[:len(df.index)])
+    plt.figure(figsize=(8, 8), dpi=80)
+    ax = sns.barplot(y=df.index, x=df.mean(axis=1),palette = colors[:len(df.index)])
     ax.set_xlabel("Course Code")
     ax.set_ylabel("Average Contribution")
     plt.title("Average of Contributions of Courses per Course")
     plt.show()
     
 
-def course_pi_usage(filter_choice, mandatory):
+def course_pi_usage(filter_choice, mandatory, termplan_choice):
     clear_output(wait=True)
     if mandatory:
-        df = mand_df.loc[:, "1":"7"]
+        df = mand_df.copy()
     else:
-        df = df2.loc[:, "1":"7"]
+        df = df2.copy()
+    df = df.T.loc["1":"7"].T
+    if 'All Courses' not in termplan_choice:
+        df = filter_terms(df, termplan_choice, plan_titles, plans)
     if filter_choice:
         df_filter = df.copy()
         df_filter[df < 3] = 0
@@ -153,12 +217,15 @@ def contrib_dist_perpi(pi, filter_choice, mandatory):
     ax.set_xlabel("Contribution Level")
     ax.set_ylabel("Number of Courses")
 
-def average_pi_contribution(filter_choice, mandatory):
+def average_pi_contribution(filter_choice, mandatory, termplan_choice):
     clear_output(wait=True)
     if mandatory:
-        df = mand_df.loc[:, "1":"7"]
+        df = mand_df.copy()
     else:
-        df = df2.loc[:, "1":"7"]
+        df = df2.copy()
+    df = df.T.loc["1":"7"].T
+    if 'All Courses' not in termplan_choice:
+        df = filter_terms(df, termplan_choice, plan_titles, plans)
     if filter_choice:
         df_filter = df.copy()
         df_filter[df < 3] = 0
